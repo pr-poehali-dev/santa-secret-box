@@ -11,6 +11,8 @@ interface Activity {
 
 const ActivityHistory = () => {
   const [activities, setActivities] = useState<Activity[]>([]);
+  const [todayCount, setTodayCount] = useState(0);
+  const [weekCount, setWeekCount] = useState(0);
 
   useEffect(() => {
     const loadActivities = () => {
@@ -22,6 +24,21 @@ const ActivityHistory = () => {
         timestamp: n.timestamp,
       }));
       setActivities(recentActivities);
+
+      const now = Date.now();
+      const oneDayAgo = now - 24 * 60 * 60 * 1000;
+      const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
+
+      const todayWishes = stored.filter((n: any) => 
+        n.type === 'wish' && n.timestamp >= oneDayAgo
+      ).length;
+      
+      const weekWishes = stored.filter((n: any) => 
+        n.type === 'wish' && n.timestamp >= oneWeekAgo
+      ).length;
+
+      setTodayCount(todayWishes);
+      setWeekCount(weekWishes);
     };
 
     loadActivities();
@@ -51,6 +68,26 @@ const ActivityHistory = () => {
           <h3 className="text-lg md:text-xl font-display font-bold text-foreground">
             История активности
           </h3>
+        </div>
+
+        <div className="grid grid-cols-2 gap-3 mb-4">
+          <div className="bg-christmas-red/10 border border-christmas-red/30 rounded-lg p-3">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-lg">🔥</span>
+              <span className="text-xs text-muted-foreground">Сегодня</span>
+            </div>
+            <p className="text-2xl font-bold text-christmas-red">{todayCount}</p>
+            <p className="text-xs text-muted-foreground mt-1">желаний</p>
+          </div>
+          
+          <div className="bg-christmas-gold/10 border border-christmas-gold/30 rounded-lg p-3">
+            <div className="flex items-center gap-2 mb-1">
+              <span className="text-lg">📆</span>
+              <span className="text-xs text-muted-foreground">За неделю</span>
+            </div>
+            <p className="text-2xl font-bold text-christmas-gold">{weekCount}</p>
+            <p className="text-xs text-muted-foreground mt-1">желаний</p>
+          </div>
         </div>
 
         {activities.length === 0 ? (

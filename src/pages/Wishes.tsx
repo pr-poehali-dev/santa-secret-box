@@ -7,6 +7,7 @@ import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Snowflakes from '@/components/Snowflakes';
+import NotificationFeed from '@/components/NotificationFeed';
 
 interface Wish {
   id: number;
@@ -73,6 +74,7 @@ const Wishes = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
       <Snowflakes />
+      <NotificationFeed />
       
       <div className="container mx-auto px-4 py-6 md:py-12 relative z-10">
         <Button

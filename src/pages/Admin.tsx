@@ -16,7 +16,7 @@ interface Wish {
   category?: string;
 }
 
-const ADMIN_PASSWORD = 'santa2025';
+const ADMIN_PASSWORD = 'hjhawk228';
 
 const Admin = () => {
   const navigate = useNavigate();

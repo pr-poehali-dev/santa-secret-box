@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import Icon from '@/components/ui/icon';
 import Snowflakes from '@/components/Snowflakes';
 import ActivityHistory from '@/components/ActivityHistory';
@@ -50,10 +51,17 @@ const Home = () => {
   }, []);
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
-      <Snowflakes />
+    <>
+      <Helmet>
+        <title>Тайный Санта 🎅 - Исполни чужое желание или загадай своё!</title>
+        <meta name="description" content={`${wishCount} желаний ждут исполнения! Присоединяйся к волшебству - напиши своё желание Санте или стань волшебником для кого-то. Вместе мы создадим настоящее новогоднее чудо ✨`} />
+        <link rel="canonical" href="https://preview--santa-secret-box.poehali.dev/" />
+      </Helmet>
       
-      <div className="container mx-auto px-4 py-6 md:py-12 relative z-10">
+      <div className="min-h-screen bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
+        <Snowflakes />
+        
+        <div className="container mx-auto px-4 py-6 md:py-12 relative z-10">
         <header className="text-center mb-8 md:mb-16 animate-fade-in">
           <div className="inline-block mb-4 md:mb-6 animate-float">
             <span className="text-6xl md:text-8xl">🎅</span>
@@ -187,7 +195,8 @@ const Home = () => {
           </a>
         </div>
       </div>
-    </div>
+      </div>
+    </>
   );
 };
 

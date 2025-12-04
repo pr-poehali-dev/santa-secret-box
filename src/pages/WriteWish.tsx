@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import confetti from 'canvas-confetti';
 import Icon from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
@@ -86,10 +87,17 @@ const WriteWish = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
-      <Snowflakes />
+    <>
+      <Helmet>
+        <title>Написать желание Санте 📝 | Тайный Санта</title>
+        <meta name="description" content="Расскажи о своей мечте! Напиши письмо Санте, и возможно твоё желание исполнится в этом году. Выбери категорию и укажи свои контакты для связи." />
+        <link rel="canonical" href="https://preview--santa-secret-box.poehali.dev/write-wish" />
+      </Helmet>
       
-      <div className="container mx-auto px-4 py-6 md:py-12 relative z-10">
+      <div className="min-h-screen bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
+        <Snowflakes />
+        
+        <div className="container mx-auto px-4 py-6 md:py-12 relative z-10">
         <Button
           variant="ghost"
           onClick={() => navigate('/')}
@@ -231,7 +239,8 @@ const WriteWish = () => {
           </DialogFooter>
         </DialogContent>
       </Dialog>
-    </div>
+      </div>
+    </>
   );
 };
 

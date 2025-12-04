@@ -1,5 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { Helmet } from 'react-helmet-async';
 import confetti from 'canvas-confetti';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
@@ -73,10 +74,17 @@ const Wishes = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
-      <Snowflakes />
+    <>
+      <Helmet>
+        <title>Исполнить желание 🎁 - {filteredWishes.length} {filteredWishes.length === 1 ? 'желание' : filteredWishes.length < 5 ? 'желания' : 'желаний'} | Тайный Санта</title>
+        <meta name="description" content={`Стань настоящим Сантой! ${filteredWishes.length} желаний ждут исполнения. Выбери желание и подари радость тем, кто в этом нуждается. Материальные подарки, помощь, общение, эмоции.`} />
+        <link rel="canonical" href="https://preview--santa-secret-box.poehali.dev/wishes" />
+      </Helmet>
       
-      <div className="container mx-auto px-4 py-6 md:py-12 relative z-10">
+      <div className="min-h-screen bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
+        <Snowflakes />
+        
+        <div className="container mx-auto px-4 py-6 md:py-12 relative z-10">
         <Button
           variant="ghost"
           onClick={() => navigate('/')}
@@ -266,7 +274,8 @@ const Wishes = () => {
           )}
         </DialogContent>
       </Dialog>
-    </div>
+      </div>
+    </>
   );
 };
 

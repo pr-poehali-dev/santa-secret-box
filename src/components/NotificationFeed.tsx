@@ -17,7 +17,9 @@ const NotificationFeed = () => {
   useEffect(() => {
     const loadNotifications = () => {
       const stored = JSON.parse(localStorage.getItem('notifications') || '[]');
-      const recent = stored.slice(0, 6).filter((n: Notification) => !shownIds.has(n.id));
+      const recent = stored
+        .slice(0, 6)
+        .filter((n: Notification) => !shownIds.has(n.id) && n.type === 'wish');
       setNotifications(recent);
     };
 

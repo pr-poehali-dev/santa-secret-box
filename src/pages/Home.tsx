@@ -2,7 +2,6 @@ import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import Snowflakes from '@/components/Snowflakes';
-import NotificationFeed from '@/components/NotificationFeed';
 import ActivityHistory from '@/components/ActivityHistory';
 
 const Home = () => {

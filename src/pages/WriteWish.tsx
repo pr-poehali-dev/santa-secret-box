@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import confetti from 'canvas-confetti';
 import Icon from '@/components/ui/icon';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Button } from '@/components/ui/button';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { useToast } from '@/hooks/use-toast';
 import Snowflakes from '@/components/Snowflakes';
 
@@ -14,12 +16,13 @@ const WriteWish = () => {
   const [wish, setWish] = useState('');
   const [country, setCountry] = useState('');
   const [telegram, setTelegram] = useState('');
+  const [category, setCategory] = useState('');
   const [showDialog, setShowDialog] = useState(false);
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!wish.trim() || !country.trim() || !telegram.trim()) {
+    if (!wish.trim() || !country.trim() || !telegram.trim() || !category) {
       toast({
         title: 'Заполните все поля',
         description: 'Все поля обязательны для заполнения',
@@ -45,6 +48,7 @@ const WriteWish = () => {
       wish,
       country,
       telegram,
+      category,
       id: Date.now(),
     };
 
@@ -60,13 +64,20 @@ const WriteWish = () => {
     };
     localStorage.setItem('notifications', JSON.stringify([newNotification, ...notifications]));
 
+    confetti({
+      particleCount: 100,
+      spread: 70,
+      origin: { y: 0.6 },
+      colors: ['#ea384c', '#F97316', '#0EA5E9', '#22c55e'],
+    });
+
     toast({
       title: '✨ Желание отправлено!',
       description: 'Твоё письмо Санте получено. Надеемся, что оно исполнится!',
     });
 
     setShowDialog(false);
-    navigate('/wishes');
+    setTimeout(() => navigate('/wishes'), 500);
   };
 
   return (
@@ -140,6 +151,26 @@ const WriteWish = () => {
                 />
                 <p className="text-sm text-muted-foreground mt-2">
                   Через Telegram с тобой свяжется твой Тайный Санта
+                </p>
+              </div>
+
+              <div>
+                <label className="block text-lg font-semibold text-foreground mb-3">
+                  🏷️ Категория желания
+                </label>
+                <Select value={category} onValueChange={setCategory} required>
+                  <SelectTrigger className="text-base border-2 focus:border-christmas-red transition-colors">
+                    <SelectValue placeholder="Выбери категорию" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="material">🎁 Материальное (подарки, вещи)</SelectItem>
+                    <SelectItem value="help">🤝 Помощь (финансовая, практическая)</SelectItem>
+                    <SelectItem value="communication">💬 Общение (дружба, поддержка)</SelectItem>
+                    <SelectItem value="experience">✨ Эмоции (впечатления, мероприятия)</SelectItem>
+                  </SelectContent>
+                </Select>
+                <p className="text-sm text-muted-foreground mt-2">
+                  Это поможет найти подходящего Санту
                 </p>
               </div>
 

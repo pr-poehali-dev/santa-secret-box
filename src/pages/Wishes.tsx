@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
+import confetti from 'canvas-confetti';
 import Icon from '@/components/ui/icon';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from '@/components/ui/dialog';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import Snowflakes from '@/components/Snowflakes';
 
 interface Wish {
@@ -11,6 +13,7 @@ interface Wish {
   wish: string;
   country: string;
   telegram: string;
+  category?: string;
 }
 
 const Wishes = () => {
@@ -19,6 +22,7 @@ const Wishes = () => {
   const [selectedWish, setSelectedWish] = useState<Wish | null>(null);
   const [showTelegram, setShowTelegram] = useState(false);
   const [currentPage, setCurrentPage] = useState(1);
+  const [filterCategory, setFilterCategory] = useState<string>('all');
   const wishesPerPage = 9;
 
   useEffect(() => {
@@ -26,10 +30,14 @@ const Wishes = () => {
     setWishes(storedWishes);
   }, []);
 
+  const filteredWishes = filterCategory === 'all' 
+    ? wishes 
+    : wishes.filter(w => w.category === filterCategory);
+
   const indexOfLastWish = currentPage * wishesPerPage;
   const indexOfFirstWish = indexOfLastWish - wishesPerPage;
-  const currentWishes = wishes.slice(indexOfFirstWish, indexOfLastWish);
-  const totalPages = Math.ceil(wishes.length / wishesPerPage);
+  const currentWishes = filteredWishes.slice(indexOfFirstWish, indexOfLastWish);
+  const totalPages = Math.ceil(filteredWishes.length / wishesPerPage);
 
   const truncateText = (text: string, maxLength: number) => {
     if (text.length <= maxLength) return text;
@@ -47,6 +55,13 @@ const Wishes = () => {
         timestamp: Date.now(),
       };
       localStorage.setItem('notifications', JSON.stringify([newNotification, ...notifications]));
+
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#ea384c', '#F97316', '#0EA5E9', '#22c55e'],
+      });
     }
   };
 
@@ -64,7 +79,7 @@ const Wishes = () => {
           Назад
         </Button>
 
-        <div className="text-center mb-12 animate-fade-in">
+        <div className="text-center mb-8 animate-fade-in">
           <div className="inline-block mb-4 animate-float">
             <span className="text-6xl">🎁</span>
           </div>
@@ -75,6 +90,23 @@ const Wishes = () => {
             Выбери желание, которое хочешь исполнить, и стань настоящим Сантой для кого-то!
           </p>
         </div>
+
+        {wishes.length > 0 && (
+          <div className="max-w-md mx-auto mb-8">
+            <Select value={filterCategory} onValueChange={setFilterCategory}>
+              <SelectTrigger className="border-2 border-christmas-gold/30 bg-card/90 backdrop-blur-sm">
+                <SelectValue placeholder="Фильтр по категории" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="all">🌟 Все категории</SelectItem>
+                <SelectItem value="material">🎁 Материальное</SelectItem>
+                <SelectItem value="help">🤝 Помощь</SelectItem>
+                <SelectItem value="communication">💬 Общение</SelectItem>
+                <SelectItem value="experience">✨ Эмоции</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        )}
 
         {wishes.length === 0 ? (
           <div className="text-center py-16">
@@ -100,16 +132,21 @@ const Wishes = () => {
                 onClick={() => setSelectedWish(wishItem)}
               >
                 <CardContent className="p-6">
-                  <div className="flex items-start gap-3 mb-4">
-                    <span className="text-3xl">🌟</span>
-                    <div className="flex-1">
-                      <div className="flex items-center gap-2 mb-2">
-                        <Icon name="MapPin" size={16} className="text-christmas-red" />
-                        <span className="text-sm font-semibold text-christmas-red">
-                          {wishItem.country}
-                        </span>
-                      </div>
+                  <div className="flex items-start justify-between gap-3 mb-4">
+                    <div className="flex items-center gap-2">
+                      <Icon name="MapPin" size={16} className="text-christmas-red" />
+                      <span className="text-sm font-semibold text-christmas-red">
+                        {wishItem.country}
+                      </span>
                     </div>
+                    {wishItem.category && (
+                      <span className="text-2xl">
+                        {wishItem.category === 'material' && '🎁'}
+                        {wishItem.category === 'help' && '🤝'}
+                        {wishItem.category === 'communication' && '💬'}
+                        {wishItem.category === 'experience' && '✨'}
+                      </span>
+                    )}
                   </div>
                   <p className="text-foreground/80 leading-relaxed line-clamp-4">
                     {truncateText(wishItem.wish, 120)}

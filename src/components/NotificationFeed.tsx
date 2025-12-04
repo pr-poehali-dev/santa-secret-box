@@ -28,7 +28,8 @@ const NotificationFeed = () => {
   }, [shownIds]);
 
   useEffect(() => {
-    if (notifications.length === 0 || currentNotification) return;
+    if (notifications.length === 0) return;
+    if (currentNotification) return;
 
     const nextNotification = notifications[0];
     if (!nextNotification) return;
@@ -38,18 +39,17 @@ const NotificationFeed = () => {
 
     const hideTimer = setTimeout(() => {
       setVisible(false);
-    }, 2700);
-
-    const removeTimer = setTimeout(() => {
-      setShownIds((prev) => new Set([...prev, nextNotification.id]));
-      setCurrentNotification(null);
+      
+      setTimeout(() => {
+        setShownIds((prev) => new Set([...prev, nextNotification.id]));
+        setCurrentNotification(null);
+      }, 300);
     }, 3000);
 
     return () => {
       clearTimeout(hideTimer);
-      clearTimeout(removeTimer);
     };
-  }, [notifications, currentNotification]);
+  }, [notifications, currentNotification, shownIds]);
 
   if (!currentNotification) return null;
 

@@ -10,13 +10,18 @@ const Home = () => {
   const [timeLeft, setTimeLeft] = useState({ days: 0, hours: 0, minutes: 0, seconds: 0 });
 
   useEffect(() => {
-    const updateCount = () => {
-      const wishes = JSON.parse(localStorage.getItem('wishes') || '[]');
-      setWishCount(wishes.length);
+    const updateCount = async () => {
+      try {
+        const response = await fetch('https://functions.poehali.dev/f8389ffb-4048-4cad-8f70-9c08e53f1d9a');
+        const data = await response.json();
+        setWishCount(data.wishes?.length || 0);
+      } catch (error) {
+        console.error('Failed to fetch wish count:', error);
+      }
     };
 
     updateCount();
-    const interval = setInterval(updateCount, 1000);
+    const interval = setInterval(updateCount, 5000);
 
     return () => clearInterval(interval);
   }, []);

@@ -27,9 +27,19 @@ const Wishes = () => {
   const wishesPerPage = 9;
 
   useEffect(() => {
-    const storedWishes = JSON.parse(localStorage.getItem('wishes') || '[]');
-    const sortedWishes = storedWishes.sort((a: Wish, b: Wish) => b.id - a.id);
-    setWishes(sortedWishes);
+    const fetchWishes = async () => {
+      try {
+        const response = await fetch('https://functions.poehali.dev/f8389ffb-4048-4cad-8f70-9c08e53f1d9a');
+        const data = await response.json();
+        setWishes(data.wishes || []);
+      } catch (error) {
+        console.error('Failed to fetch wishes:', error);
+      }
+    };
+
+    fetchWishes();
+    const interval = setInterval(fetchWishes, 5000);
+    return () => clearInterval(interval);
   }, []);
 
   const filteredWishes = filterCategory === 'all' 
@@ -54,14 +64,6 @@ const Wishes = () => {
     setShowTelegram(true);
     
     if (selectedWish) {
-      const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
-      const newNotification = {
-        id: Date.now(),
-        type: 'santa',
-        timestamp: Date.now(),
-      };
-      localStorage.setItem('notifications', JSON.stringify([newNotification, ...notifications]));
-
       confetti({
         particleCount: 100,
         spread: 70,

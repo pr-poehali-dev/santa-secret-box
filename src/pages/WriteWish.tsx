@@ -43,41 +43,46 @@ const WriteWish = () => {
     setShowDialog(true);
   };
 
-  const handleConfirmSubscription = () => {
-    const wishData = {
-      wish,
-      country,
-      telegram,
-      category,
-      id: Date.now(),
-    };
+  const handleConfirmSubscription = async () => {
+    try {
+      const response = await fetch('https://functions.poehali.dev/f8389ffb-4048-4cad-8f70-9c08e53f1d9a', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
+          wish,
+          country,
+          telegram,
+          category,
+        }),
+      });
 
-    const existingWishes = JSON.parse(localStorage.getItem('wishes') || '[]');
-    localStorage.setItem('wishes', JSON.stringify([...existingWishes, wishData]));
+      if (!response.ok) {
+        throw new Error('Failed to create wish');
+      }
 
-    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
-    const newNotification = {
-      id: Date.now(),
-      type: 'wish',
-      country,
-      timestamp: Date.now(),
-    };
-    localStorage.setItem('notifications', JSON.stringify([newNotification, ...notifications]));
+      confetti({
+        particleCount: 100,
+        spread: 70,
+        origin: { y: 0.6 },
+        colors: ['#ea384c', '#F97316', '#0EA5E9', '#22c55e'],
+      });
 
-    confetti({
-      particleCount: 100,
-      spread: 70,
-      origin: { y: 0.6 },
-      colors: ['#ea384c', '#F97316', '#0EA5E9', '#22c55e'],
-    });
+      toast({
+        title: '✨ Желание отправлено!',
+        description: 'Твоё письмо Санте получено. Надеемся, что оно исполнится!',
+      });
 
-    toast({
-      title: '✨ Желание отправлено!',
-      description: 'Твоё письмо Санте получено. Надеемся, что оно исполнится!',
-    });
-
-    setShowDialog(false);
-    setTimeout(() => navigate('/wishes'), 500);
+      setShowDialog(false);
+      setTimeout(() => navigate('/wishes'), 500);
+    } catch (error) {
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось отправить желание. Попробуйте ещё раз.',
+        variant: 'destructive',
+      });
+    }
   };
 
   return (

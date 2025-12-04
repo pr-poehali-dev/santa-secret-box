@@ -15,34 +15,36 @@ const ActivityHistory = () => {
   const [weekCount, setWeekCount] = useState(0);
 
   useEffect(() => {
-    const loadActivities = () => {
-      const stored = JSON.parse(localStorage.getItem('notifications') || '[]');
-      const recentActivities = stored.slice(0, 10).map((n: any) => ({
-        id: n.id,
-        type: n.type === 'wish' ? 'wish_created' : 'wish_fulfilled',
-        country: n.country,
-        timestamp: n.timestamp,
-      }));
-      setActivities(recentActivities);
+    const loadActivities = async () => {
+      try {
+        const response = await fetch('https://functions.poehali.dev/f8389ffb-4048-4cad-8f70-9c08e53f1d9a');
+        const data = await response.json();
+        const wishes = data.wishes || [];
 
-      const now = Date.now();
-      const oneDayAgo = now - 24 * 60 * 60 * 1000;
-      const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
+        const recentActivities = wishes.slice(0, 10).map((w: any) => ({
+          id: w.id,
+          type: 'wish_created' as const,
+          country: w.country,
+          timestamp: w.timestamp,
+        }));
+        setActivities(recentActivities);
 
-      const todayWishes = stored.filter((n: any) => 
-        n.type === 'wish' && n.timestamp >= oneDayAgo
-      ).length;
-      
-      const weekWishes = stored.filter((n: any) => 
-        n.type === 'wish' && n.timestamp >= oneWeekAgo
-      ).length;
+        const now = Date.now();
+        const oneDayAgo = now - 24 * 60 * 60 * 1000;
+        const oneWeekAgo = now - 7 * 24 * 60 * 60 * 1000;
 
-      setTodayCount(todayWishes);
-      setWeekCount(weekWishes);
+        const todayWishes = wishes.filter((w: any) => w.timestamp >= oneDayAgo).length;
+        const weekWishes = wishes.filter((w: any) => w.timestamp >= oneWeekAgo).length;
+
+        setTodayCount(todayWishes);
+        setWeekCount(weekWishes);
+      } catch (error) {
+        console.error('Failed to load activities:', error);
+      }
     };
 
     loadActivities();
-    const interval = setInterval(loadActivities, 2000);
+    const interval = setInterval(loadActivities, 5000);
 
     return () => clearInterval(interval);
   }, []);

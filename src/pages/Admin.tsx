@@ -37,12 +37,21 @@ const Admin = () => {
     }
   }, []);
 
-  const loadWishes = () => {
-    const storedWishes = JSON.parse(localStorage.getItem('wishes') || '[]');
-    setWishes(storedWishes.reverse());
-    
-    const visitors = JSON.parse(localStorage.getItem('site_visitors') || '[]');
-    setVisitorCount(visitors.length);
+  const loadWishes = async () => {
+    try {
+      const [wishesRes, visitorsRes] = await Promise.all([
+        fetch('https://functions.poehali.dev/f8389ffb-4048-4cad-8f70-9c08e53f1d9a'),
+        fetch('https://functions.poehali.dev/5f9188b6-402c-4246-8a5e-f5de87370a31')
+      ]);
+      
+      const wishesData = await wishesRes.json();
+      const visitorsData = await visitorsRes.json();
+      
+      setWishes(wishesData.wishes || []);
+      setVisitorCount(visitorsData.count || 0);
+    } catch (error) {
+      console.error('Failed to load data:', error);
+    }
   };
 
   const handleLogin = () => {
@@ -63,23 +72,28 @@ const Admin = () => {
     }
   };
 
-  const handleDeleteWish = () => {
+  const handleDeleteWish = async () => {
     if (!wishToDelete) return;
 
-    const updatedWishes = wishes.filter(w => w.id !== wishToDelete.id);
-    localStorage.setItem('wishes', JSON.stringify(updatedWishes));
-    
-    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
-    const updatedNotifications = notifications.filter((n: any) => n.id !== wishToDelete.id);
-    localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
-    
-    setWishes(updatedWishes);
-    setWishToDelete(null);
+    try {
+      await fetch(`https://functions.poehali.dev/f8389ffb-4048-4cad-8f70-9c08e53f1d9a?id=${wishToDelete.id}`, {
+        method: 'DELETE',
+      });
+      
+      await loadWishes();
+      setWishToDelete(null);
 
-    toast({
-      title: '🗑️ Желание удалено',
-      description: 'Запись успешно удалена из системы',
-    });
+      toast({
+        title: '🗑️ Желание удалено',
+        description: 'Запись успешно удалена из системы',
+      });
+    } catch (error) {
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось удалить желание',
+        variant: 'destructive',
+      });
+    }
   };
 
   const toggleWishSelection = (wishId: number) => {
@@ -92,22 +106,31 @@ const Admin = () => {
     setSelectedWishes(newSelected);
   };
 
-  const handleBulkDelete = () => {
-    const updatedWishes = wishes.filter(w => !selectedWishes.has(w.id));
-    localStorage.setItem('wishes', JSON.stringify(updatedWishes));
-    
-    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
-    const updatedNotifications = notifications.filter((n: any) => !selectedWishes.has(n.id));
-    localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
-    
-    setWishes(updatedWishes);
-    setSelectedWishes(new Set());
-    setShowBulkDeleteDialog(false);
+  const handleBulkDelete = async () => {
+    try {
+      await Promise.all(
+        Array.from(selectedWishes).map(id =>
+          fetch(`https://functions.poehali.dev/f8389ffb-4048-4cad-8f70-9c08e53f1d9a?id=${id}`, {
+            method: 'DELETE',
+          })
+        )
+      );
+      
+      await loadWishes();
+      setSelectedWishes(new Set());
+      setShowBulkDeleteDialog(false);
 
-    toast({
-      title: '🗑️ Желания удалены',
-      description: `Удалено записей: ${selectedWishes.size}`,
-    });
+      toast({
+        title: '🗑️ Желания удалены',
+        description: `Удалено записей: ${selectedWishes.size}`,
+      });
+    } catch (error) {
+      toast({
+        title: 'Ошибка',
+        description: 'Не удалось удалить желания',
+        variant: 'destructive',
+      });
+    }
   };
 
   const selectAll = () => {

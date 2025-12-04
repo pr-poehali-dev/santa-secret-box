@@ -1,0 +1,23 @@
+{
+  "tests": [
+    {
+      "name": "Get visitor count",
+      "method": "GET",
+      "path": "/",
+      "expectedStatus": 200,
+      "bodyMatcher": "skip"
+    },
+    {
+      "name": "Register visitor",
+      "method": "POST",
+      "path": "/",
+      "body": {
+        "visitor_id": "test_visitor_123"
+      },
+      "expectedStatus": 200,
+      "expectedBody": {
+        "success": true
+      }
+    }
+  ]
+}

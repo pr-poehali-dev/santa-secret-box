@@ -28,6 +28,15 @@ const WriteWish = () => {
       return;
     }
 
+    if (!telegram.startsWith('@')) {
+      toast({
+        title: 'Неверный формат Telegram',
+        description: 'Ник должен начинаться с символа @',
+        variant: 'destructive',
+      });
+      return;
+    }
+
     setShowDialog(true);
   };
 
@@ -52,7 +61,7 @@ const WriteWish = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-christmas-blue via-background to-christmas-snow relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
       <Snowflakes />
       
       <div className="container mx-auto px-4 py-12 relative z-10">
@@ -78,7 +87,7 @@ const WriteWish = () => {
             </p>
           </div>
 
-          <form onSubmit={handleSubmit} className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border-4 border-christmas-gold/30 animate-scale-in">
+          <form onSubmit={handleSubmit} className="bg-card/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 border-4 border-christmas-gold/30 animate-scale-in">
             <div className="space-y-6">
               <div>
                 <label className="block text-lg font-semibold text-foreground mb-3">
@@ -150,20 +159,29 @@ const WriteWish = () => {
               Там ты найдёшь много интересного о проекте "Тайный Санта" и узнаешь истории исполненных желаний!
             </DialogDescription>
           </DialogHeader>
-          <DialogFooter className="flex-col sm:flex-row gap-3">
+          <DialogFooter className="flex-col sm:flex-col gap-3">
             <Button
-              variant="outline"
-              onClick={() => setShowDialog(false)}
-              className="w-full sm:w-auto"
+              asChild
+              className="w-full bg-accent hover:bg-accent/90 text-white"
             >
-              Отмена
+              <a href="https://t.me/tainiy_santas" target="_blank" rel="noopener noreferrer">
+                <Icon name="ExternalLink" size={20} className="mr-2" />
+                Подписаться на канал
+              </a>
             </Button>
             <Button
               onClick={handleConfirmSubscription}
-              className="w-full sm:w-auto bg-christmas-red hover:bg-christmas-red/90"
+              className="w-full bg-christmas-red hover:bg-christmas-red/90"
             >
               <Icon name="Check" size={20} className="mr-2" />
               Я подписался
+            </Button>
+            <Button
+              variant="outline"
+              onClick={() => setShowDialog(false)}
+              className="w-full"
+            >
+              Отмена
             </Button>
           </DialogFooter>
         </DialogContent>

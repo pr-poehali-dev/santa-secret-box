@@ -34,7 +34,7 @@ const Wishes = () => {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-to-b from-christmas-blue via-background to-christmas-snow relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
       <Snowflakes />
       
       <div className="container mx-auto px-4 py-12 relative z-10">
@@ -78,7 +78,7 @@ const Wishes = () => {
             {wishes.map((wishItem) => (
               <Card
                 key={wishItem.id}
-                className="cursor-pointer hover:scale-105 transition-all duration-300 hover:shadow-2xl border-2 border-transparent hover:border-christmas-gold/50 animate-scale-in bg-white/90 backdrop-blur-sm"
+                className="cursor-pointer hover:scale-105 transition-all duration-300 hover:shadow-2xl border-2 border-transparent hover:border-christmas-gold/50 animate-scale-in bg-card/90 backdrop-blur-sm"
                 onClick={() => setSelectedWish(wishItem)}
               >
                 <CardContent className="p-6">

@@ -4,7 +4,7 @@ import Snowflakes from '@/components/Snowflakes';
 
 const Home = () => {
   return (
-    <div className="min-h-screen bg-gradient-to-b from-christmas-blue via-background to-christmas-snow relative overflow-hidden">
+    <div className="min-h-screen bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
       <Snowflakes />
       
       <div className="container mx-auto px-4 py-12 relative z-10">
@@ -21,7 +21,7 @@ const Home = () => {
         </header>
 
         <div className="max-w-4xl mx-auto mb-16">
-          <div className="bg-white/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-christmas-gold/30 animate-scale-in">
+          <div className="bg-card/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-christmas-gold/30 animate-scale-in">
             <div className="text-center mb-8">
               <h2 className="text-3xl md:text-4xl font-display font-bold text-christmas-red mb-4">
                 ✨ Как это работает? ✨
@@ -58,7 +58,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="max-w-3xl mx-auto bg-gradient-to-r from-christmas-blue/10 to-christmas-green/10 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-white/50 animate-fade-in">
+        <div className="max-w-3xl mx-auto bg-card/50 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-border animate-fade-in">
           <div className="flex items-start gap-4">
             <div className="text-4xl mt-1 animate-float">🎄</div>
             <div>

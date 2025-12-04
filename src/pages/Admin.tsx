@@ -25,6 +25,9 @@ const Admin = () => {
   const [password, setPassword] = useState('');
   const [wishes, setWishes] = useState<Wish[]>([]);
   const [wishToDelete, setWishToDelete] = useState<Wish | null>(null);
+  const [selectedWishes, setSelectedWishes] = useState<Set<number>>(new Set());
+  const [showBulkDeleteDialog, setShowBulkDeleteDialog] = useState(false);
+  const [visitorCount, setVisitorCount] = useState(0);
 
   useEffect(() => {
     const authStatus = sessionStorage.getItem('admin_auth');
@@ -37,6 +40,9 @@ const Admin = () => {
   const loadWishes = () => {
     const storedWishes = JSON.parse(localStorage.getItem('wishes') || '[]');
     setWishes(storedWishes.reverse());
+    
+    const visitors = JSON.parse(localStorage.getItem('site_visitors') || '[]');
+    setVisitorCount(visitors.length);
   };
 
   const handleLogin = () => {
@@ -74,6 +80,42 @@ const Admin = () => {
       title: '🗑️ Желание удалено',
       description: 'Запись успешно удалена из системы',
     });
+  };
+
+  const toggleWishSelection = (wishId: number) => {
+    const newSelected = new Set(selectedWishes);
+    if (newSelected.has(wishId)) {
+      newSelected.delete(wishId);
+    } else {
+      newSelected.add(wishId);
+    }
+    setSelectedWishes(newSelected);
+  };
+
+  const handleBulkDelete = () => {
+    const updatedWishes = wishes.filter(w => !selectedWishes.has(w.id));
+    localStorage.setItem('wishes', JSON.stringify(updatedWishes));
+    
+    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+    const updatedNotifications = notifications.filter((n: any) => !selectedWishes.has(n.id));
+    localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
+    
+    setWishes(updatedWishes);
+    setSelectedWishes(new Set());
+    setShowBulkDeleteDialog(false);
+
+    toast({
+      title: '🗑️ Желания удалены',
+      description: `Удалено записей: ${selectedWishes.size}`,
+    });
+  };
+
+  const selectAll = () => {
+    setSelectedWishes(new Set(wishes.map(w => w.id)));
+  };
+
+  const deselectAll = () => {
+    setSelectedWishes(new Set());
   };
 
   const handleLogout = () => {
@@ -185,6 +227,30 @@ const Admin = () => {
           </p>
         </div>
 
+        <div className="max-w-4xl mx-auto mb-8 grid sm:grid-cols-2 gap-4">
+          <Card className="bg-card/90 backdrop-blur-sm border-2 border-christmas-gold/30">
+            <CardContent className="p-4 md:p-6">
+              <div className="flex items-center gap-3 mb-2">
+                <Icon name="Users" size={24} className="text-christmas-red" />
+                <h3 className="text-lg font-semibold text-foreground">Посетители</h3>
+              </div>
+              <p className="text-3xl md:text-4xl font-bold text-christmas-red">{visitorCount}</p>
+              <p className="text-sm text-muted-foreground mt-1">уникальных пользователей</p>
+            </CardContent>
+          </Card>
+
+          <Card className="bg-card/90 backdrop-blur-sm border-2 border-christmas-gold/30">
+            <CardContent className="p-4 md:p-6">
+              <div className="flex items-center gap-3 mb-2">
+                <Icon name="Star" size={24} className="text-christmas-gold" />
+                <h3 className="text-lg font-semibold text-foreground">Желания</h3>
+              </div>
+              <p className="text-3xl md:text-4xl font-bold text-christmas-gold">{wishes.length}</p>
+              <p className="text-sm text-muted-foreground mt-1">всего записей</p>
+            </CardContent>
+          </Card>
+        </div>
+
         {wishes.length === 0 ? (
           <div className="text-center py-16">
             <div className="text-6xl mb-6">📭</div>
@@ -193,13 +259,69 @@ const Admin = () => {
             </p>
           </div>
         ) : (
-          <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-7xl mx-auto">
-            {wishes.map((wishItem) => (
-              <Card
-                key={wishItem.id}
-                className="border-2 border-christmas-gold/30 animate-scale-in bg-card/90 backdrop-blur-sm"
-              >
-                <CardContent className="p-4 md:p-6">
+          <>
+            <div className="max-w-7xl mx-auto mb-6 flex flex-wrap gap-3 items-center justify-between">
+              <div className="flex gap-2">
+                <Button
+                  onClick={selectAll}
+                  variant="outline"
+                  size="sm"
+                  className="text-sm"
+                >
+                  <Icon name="CheckSquare" size={16} className="mr-2" />
+                  Выбрать все
+                </Button>
+                <Button
+                  onClick={deselectAll}
+                  variant="outline"
+                  size="sm"
+                  className="text-sm"
+                  disabled={selectedWishes.size === 0}
+                >
+                  <Icon name="Square" size={16} className="mr-2" />
+                  Снять выбор
+                </Button>
+              </div>
+              
+              {selectedWishes.size > 0 && (
+                <div className="flex gap-2 items-center">
+                  <span className="text-sm text-muted-foreground">
+                    Выбрано: {selectedWishes.size}
+                  </span>
+                  <Button
+                    onClick={() => setShowBulkDeleteDialog(true)}
+                    variant="destructive"
+                    size="sm"
+                  >
+                    <Icon name="Trash2" size={16} className="mr-2" />
+                    Удалить выбранные
+                  </Button>
+                </div>
+              )}
+            </div>
+            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 md:gap-6 max-w-7xl mx-auto">
+              {wishes.map((wishItem) => (
+                <Card
+                  key={wishItem.id}
+                  className={`border-2 animate-scale-in bg-card/90 backdrop-blur-sm transition-all ${
+                    selectedWishes.has(wishItem.id)
+                      ? 'border-christmas-red ring-2 ring-christmas-red/50'
+                      : 'border-christmas-gold/30'
+                  }`}
+                >
+                  <CardContent className="p-4 md:p-6">
+                    <div className="flex items-center justify-end mb-2">
+                      <button
+                        onClick={() => toggleWishSelection(wishItem.id)}
+                        className="p-1 hover:bg-muted rounded transition-colors"
+                      >
+                        {selectedWishes.has(wishItem.id) ? (
+                          <Icon name="CheckSquare" size={20} className="text-christmas-red" />
+                        ) : (
+                          <Icon name="Square" size={20} className="text-muted-foreground" />
+                        )}
+                      </button>
+                    </div>
                   <div className="flex items-start justify-between gap-2 md:gap-3 mb-3 md:mb-4">
                     <div className="flex items-center gap-1.5 md:gap-2">
                       <Icon name="MapPin" size={14} className="text-christmas-red md:w-4 md:h-4" />
@@ -226,21 +348,54 @@ const Admin = () => {
                     <span>{wishItem.telegram}</span>
                   </div>
 
-                  <Button
-                    onClick={() => setWishToDelete(wishItem)}
-                    variant="destructive"
-                    size="sm"
-                    className="w-full"
-                  >
-                    <Icon name="Trash2" size={16} className="mr-2" />
-                    Удалить желание
-                  </Button>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
+                    <Button
+                      onClick={() => setWishToDelete(wishItem)}
+                      variant="destructive"
+                      size="sm"
+                      className="w-full"
+                    >
+                      <Icon name="Trash2" size={16} className="mr-2" />
+                      Удалить желание
+                    </Button>
+                  </CardContent>
+                </Card>
+              ))}
+            </div>
+          </>
         )}
       </div>
+
+      <Dialog open={showBulkDeleteDialog} onOpenChange={() => setShowBulkDeleteDialog(false)}>
+        <DialogContent>
+          <DialogHeader>
+            <DialogTitle className="text-2xl font-display text-destructive flex items-center gap-2">
+              <Icon name="AlertTriangle" size={28} />
+              Массовое удаление
+            </DialogTitle>
+            <DialogDescription className="text-base pt-4">
+              Вы уверены, что хотите удалить {selectedWishes.size} {selectedWishes.size === 1 ? 'желание' : selectedWishes.size < 5 ? 'желания' : 'желаний'}? Это действие нельзя отменить.
+            </DialogDescription>
+          </DialogHeader>
+
+          <DialogFooter className="flex-col sm:flex-row gap-2">
+            <Button
+              variant="outline"
+              onClick={() => setShowBulkDeleteDialog(false)}
+              className="flex-1"
+            >
+              Отмена
+            </Button>
+            <Button
+              variant="destructive"
+              onClick={handleBulkDelete}
+              className="flex-1"
+            >
+              <Icon name="Trash2" size={20} className="mr-2" />
+              Да, удалить все
+            </Button>
+          </DialogFooter>
+        </DialogContent>
+      </Dialog>
 
       <Dialog open={!!wishToDelete} onOpenChange={() => setWishToDelete(null)}>
         <DialogContent>

@@ -62,6 +62,11 @@ const Admin = () => {
 
     const updatedWishes = wishes.filter(w => w.id !== wishToDelete.id);
     localStorage.setItem('wishes', JSON.stringify(updatedWishes));
+    
+    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+    const updatedNotifications = notifications.filter((n: any) => n.id !== wishToDelete.id);
+    localStorage.setItem('notifications', JSON.stringify(updatedNotifications));
+    
     setWishes(updatedWishes);
     setWishToDelete(null);
 

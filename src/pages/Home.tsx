@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import Snowflakes from '@/components/Snowflakes';
 import NotificationFeed from '@/components/NotificationFeed';
+import ActivityHistory from '@/components/ActivityHistory';
 
 const Home = () => {
   const [wishCount, setWishCount] = useState(0);
@@ -24,56 +25,56 @@ const Home = () => {
       <Snowflakes />
       <NotificationFeed />
       
-      <div className="container mx-auto px-4 py-12 relative z-10">
-        <header className="text-center mb-16 animate-fade-in">
-          <div className="inline-block mb-6 animate-float">
-            <span className="text-8xl">🎅</span>
+      <div className="container mx-auto px-4 py-6 md:py-12 relative z-10">
+        <header className="text-center mb-8 md:mb-16 animate-fade-in">
+          <div className="inline-block mb-4 md:mb-6 animate-float">
+            <span className="text-6xl md:text-8xl">🎅</span>
           </div>
-          <h1 className="text-5xl md:text-7xl font-display font-bold text-christmas-red mb-4 drop-shadow-lg">
+          <h1 className="text-4xl md:text-5xl lg:text-7xl font-display font-bold text-christmas-red mb-3 md:mb-4 drop-shadow-lg px-4">
             Тайный Санта
           </h1>
-          <p className="text-xl md:text-2xl text-foreground/80 max-w-3xl mx-auto leading-relaxed mb-4">
+          <p className="text-base md:text-xl lg:text-2xl text-foreground/80 max-w-3xl mx-auto leading-relaxed mb-4 px-4">
             Волшебный год наступает! Давайте сделаем его особенным, даря радость незнакомцам
           </p>
-          <div className="inline-flex items-center gap-2 bg-christmas-gold/20 border-2 border-christmas-gold/50 rounded-full px-6 py-3 animate-scale-in">
-            <Icon name="Star" size={20} className="text-christmas-gold" />
-            <span className="text-lg font-semibold text-foreground">
+          <div className="inline-flex items-center gap-2 bg-christmas-gold/20 border-2 border-christmas-gold/50 rounded-full px-4 md:px-6 py-2 md:py-3 animate-scale-in">
+            <Icon name="Star" size={18} className="text-christmas-gold md:w-5 md:h-5" />
+            <span className="text-sm md:text-lg font-semibold text-foreground">
               {wishCount} {wishCount === 1 ? 'желание' : wishCount < 5 ? 'желания' : 'желаний'} ждёт исполнения
             </span>
           </div>
         </header>
 
-        <div className="max-w-4xl mx-auto mb-16">
-          <div className="bg-card/90 backdrop-blur-sm rounded-3xl shadow-2xl p-8 md:p-12 border-4 border-christmas-gold/30 animate-scale-in">
-            <div className="text-center mb-8">
-              <h2 className="text-3xl md:text-4xl font-display font-bold text-christmas-red mb-4">
+        <div className="max-w-4xl mx-auto mb-8 md:mb-16">
+          <div className="bg-card/90 backdrop-blur-sm rounded-2xl md:rounded-3xl shadow-2xl p-6 md:p-8 lg:p-12 border-2 md:border-4 border-christmas-gold/30 animate-scale-in">
+            <div className="text-center mb-6 md:mb-8">
+              <h2 className="text-2xl md:text-3xl lg:text-4xl font-display font-bold text-christmas-red mb-3 md:mb-4">
                 ✨ Как это работает? ✨
               </h2>
-              <p className="text-lg text-foreground/70 leading-relaxed">
+              <p className="text-base md:text-lg text-foreground/70 leading-relaxed">
                 Присоединяйся к волшебству! Напиши своё желание Санте или исполни мечту другого человека. 
                 Вместе мы создадим атмосферу настоящего новогоднего чуда, где каждый может стать волшебником для кого-то.
               </p>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-6">
+            <div className="grid md:grid-cols-2 gap-4 md:gap-6">
               <Link to="/write-wish">
-                <button className="w-full group relative overflow-hidden bg-gradient-to-br from-christmas-red to-christmas-red/80 hover:from-christmas-red/90 hover:to-christmas-red text-white rounded-2xl p-8 shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+                <button className="w-full group relative overflow-hidden bg-gradient-to-br from-christmas-red to-christmas-red/80 hover:from-christmas-red/90 hover:to-christmas-red text-white rounded-xl md:rounded-2xl p-6 md:p-8 shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl active:scale-95">
                   <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                   <div className="relative z-10">
-                    <Icon name="Mail" size={48} className="mx-auto mb-4" />
-                    <h3 className="text-2xl font-display font-bold mb-2">Написать Желание</h3>
-                    <p className="text-sm text-white/90">Расскажи Санте о своей мечте</p>
+                    <Icon name="Mail" size={40} className="mx-auto mb-3 md:mb-4 md:w-12 md:h-12" />
+                    <h3 className="text-xl md:text-2xl font-display font-bold mb-1 md:mb-2">Написать Желание</h3>
+                    <p className="text-xs md:text-sm text-white/90">Расскажи Санте о своей мечте</p>
                   </div>
                 </button>
               </Link>
 
               <Link to="/wishes">
-                <button className="w-full group relative overflow-hidden bg-gradient-to-br from-christmas-gold to-christmas-gold/80 hover:from-christmas-gold/90 hover:to-christmas-gold text-white rounded-2xl p-8 shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl">
+                <button className="w-full group relative overflow-hidden bg-gradient-to-br from-christmas-gold to-christmas-gold/80 hover:from-christmas-gold/90 hover:to-christmas-gold text-white rounded-xl md:rounded-2xl p-6 md:p-8 shadow-xl transition-all duration-300 hover:scale-105 hover:shadow-2xl active:scale-95">
                   <div className="absolute inset-0 bg-white/20 translate-y-full group-hover:translate-y-0 transition-transform duration-300"></div>
                   <div className="relative z-10">
-                    <Icon name="Gift" size={48} className="mx-auto mb-4" />
-                    <h3 className="text-2xl font-display font-bold mb-2">Исполнить Желание</h3>
-                    <p className="text-sm text-white/90">Стань Сантой для кого-то</p>
+                    <Icon name="Gift" size={40} className="mx-auto mb-3 md:mb-4 md:w-12 md:h-12" />
+                    <h3 className="text-xl md:text-2xl font-display font-bold mb-1 md:mb-2">Исполнить Желание</h3>
+                    <p className="text-xs md:text-sm text-white/90">Стань Сантой для кого-то</p>
                   </div>
                 </button>
               </Link>
@@ -81,14 +82,14 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="max-w-3xl mx-auto bg-card/50 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-border animate-fade-in mb-8">
-          <div className="flex items-start gap-4">
-            <div className="text-4xl mt-1 animate-float">🎄</div>
+        <div className="max-w-3xl mx-auto bg-card/50 backdrop-blur-sm rounded-xl md:rounded-2xl p-6 md:p-8 shadow-xl border border-border animate-fade-in mb-6 md:mb-8">
+          <div className="flex items-start gap-3 md:gap-4">
+            <div className="text-3xl md:text-4xl mt-1 animate-float">🎄</div>
             <div>
-              <h3 className="text-2xl font-display font-bold text-christmas-red mb-3">
+              <h3 className="text-xl md:text-2xl font-display font-bold text-christmas-red mb-2 md:mb-3">
                 Присоединяйся к волшебству!
               </h3>
-              <p className="text-lg text-foreground/80 leading-relaxed">
+              <p className="text-sm md:text-lg text-foreground/80 leading-relaxed">
                 Каждое исполненное желание делает мир добрее. Давайте вместе создадим настоящее новогоднее чудо 
                 и подарим радость тем, кто в этом нуждается. Ведь настоящее волшебство начинается с нас!
               </p>
@@ -96,16 +97,20 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="max-w-3xl mx-auto text-center pb-8">
+        <div className="max-w-3xl mx-auto mb-8">
+          <ActivityHistory />
+        </div>
+
+        <div className="max-w-3xl mx-auto text-center pb-6 md:pb-8">
           <a
             href="https://t.me/tainiy_santas"
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex items-center gap-2 px-6 py-3 bg-accent/90 hover:bg-accent text-white rounded-xl shadow-lg transition-all duration-300 hover:scale-105"
+            className="inline-flex items-center gap-2 px-5 md:px-6 py-2.5 md:py-3 bg-accent/90 hover:bg-accent text-white rounded-lg md:rounded-xl shadow-lg transition-all duration-300 hover:scale-105 active:scale-95 text-sm md:text-base"
           >
-            <Icon name="MessageCircle" size={20} />
+            <Icon name="MessageCircle" size={18} className="md:w-5 md:h-5" />
             <span className="font-semibold">Наш Telegram канал</span>
-            <Icon name="ExternalLink" size={16} />
+            <Icon name="ExternalLink" size={14} className="md:w-4 md:h-4" />
           </a>
         </div>
       </div>

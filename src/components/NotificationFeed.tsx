@@ -54,32 +54,32 @@ const NotificationFeed = () => {
   if (!currentNotification) return null;
 
   return (
-    <div className="fixed top-4 right-4 z-50 max-w-sm">
+    <div className="fixed top-2 right-2 md:top-4 md:right-4 z-50 max-w-[280px] md:max-w-sm">
       <div
-        className={`bg-card/95 backdrop-blur-md border-2 border-christmas-gold/50 rounded-xl p-4 shadow-2xl transition-all duration-300 ${
+        className={`bg-card/95 backdrop-blur-md border-2 border-christmas-gold/50 rounded-lg md:rounded-xl p-3 md:p-4 shadow-2xl transition-all duration-300 ${
           visible ? 'opacity-100 translate-x-0' : 'opacity-0 translate-x-full'
         }`}
       >
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-2 md:gap-3">
           {currentNotification.type === 'wish' ? (
             <>
-              <span className="text-2xl">✨</span>
+              <span className="text-xl md:text-2xl">✨</span>
               <div className="flex-1">
-                <p className="text-sm font-semibold text-foreground">
+                <p className="text-xs md:text-sm font-semibold text-foreground">
                   Кто-то из {currentNotification.country || 'страны'} загадал желание
                 </p>
               </div>
-              <Icon name="Sparkles" size={20} className="text-christmas-gold" />
+              <Icon name="Sparkles" size={16} className="text-christmas-gold md:w-5 md:h-5" />
             </>
           ) : (
             <>
-              <span className="text-2xl">🎅</span>
+              <span className="text-xl md:text-2xl">🎅</span>
               <div className="flex-1">
-                <p className="text-sm font-semibold text-foreground">
+                <p className="text-xs md:text-sm font-semibold text-foreground">
                   Кто-то стал Тайным Сантой
                 </p>
               </div>
-              <Icon name="Gift" size={20} className="text-christmas-red" />
+              <Icon name="Gift" size={16} className="text-christmas-red md:w-5 md:h-5" />
             </>
           )}
         </div>

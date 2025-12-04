@@ -51,6 +51,15 @@ const WriteWish = () => {
     const existingWishes = JSON.parse(localStorage.getItem('wishes') || '[]');
     localStorage.setItem('wishes', JSON.stringify([...existingWishes, wishData]));
 
+    const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+    const newNotification = {
+      id: Date.now(),
+      type: 'wish',
+      country,
+      timestamp: Date.now(),
+    };
+    localStorage.setItem('notifications', JSON.stringify([newNotification, ...notifications]));
+
     toast({
       title: '✨ Желание отправлено!',
       description: 'Твоё письмо Санте получено. Надеемся, что оно исполнится!',

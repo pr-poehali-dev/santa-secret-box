@@ -1,11 +1,13 @@
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import Snowflakes from '@/components/Snowflakes';
+import NotificationFeed from '@/components/NotificationFeed';
 
 const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
       <Snowflakes />
+      <NotificationFeed />
       
       <div className="container mx-auto px-4 py-12 relative z-10">
         <header className="text-center mb-16 animate-fade-in">
@@ -58,7 +60,7 @@ const Home = () => {
           </div>
         </div>
 
-        <div className="max-w-3xl mx-auto bg-card/50 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-border animate-fade-in">
+        <div className="max-w-3xl mx-auto bg-card/50 backdrop-blur-sm rounded-2xl p-8 shadow-xl border border-border animate-fade-in mb-8">
           <div className="flex items-start gap-4">
             <div className="text-4xl mt-1 animate-float">🎄</div>
             <div>
@@ -71,6 +73,19 @@ const Home = () => {
               </p>
             </div>
           </div>
+        </div>
+
+        <div className="max-w-3xl mx-auto text-center pb-8">
+          <a
+            href="https://t.me/tainiy_santas"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-2 px-6 py-3 bg-accent/90 hover:bg-accent text-white rounded-xl shadow-lg transition-all duration-300 hover:scale-105"
+          >
+            <Icon name="MessageCircle" size={20} />
+            <span className="font-semibold">Наш Telegram канал</span>
+            <Icon name="ExternalLink" size={16} />
+          </a>
         </div>
       </div>
     </div>

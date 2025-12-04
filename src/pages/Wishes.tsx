@@ -18,11 +18,18 @@ const Wishes = () => {
   const [wishes, setWishes] = useState<Wish[]>([]);
   const [selectedWish, setSelectedWish] = useState<Wish | null>(null);
   const [showTelegram, setShowTelegram] = useState(false);
+  const [currentPage, setCurrentPage] = useState(1);
+  const wishesPerPage = 9;
 
   useEffect(() => {
     const storedWishes = JSON.parse(localStorage.getItem('wishes') || '[]');
     setWishes(storedWishes);
   }, []);
+
+  const indexOfLastWish = currentPage * wishesPerPage;
+  const indexOfFirstWish = indexOfLastWish - wishesPerPage;
+  const currentWishes = wishes.slice(indexOfFirstWish, indexOfLastWish);
+  const totalPages = Math.ceil(wishes.length / wishesPerPage);
 
   const truncateText = (text: string, maxLength: number) => {
     if (text.length <= maxLength) return text;
@@ -31,6 +38,16 @@ const Wishes = () => {
 
   const handleShowTelegram = () => {
     setShowTelegram(true);
+    
+    if (selectedWish) {
+      const notifications = JSON.parse(localStorage.getItem('notifications') || '[]');
+      const newNotification = {
+        id: Date.now(),
+        type: 'santa',
+        timestamp: Date.now(),
+      };
+      localStorage.setItem('notifications', JSON.stringify([newNotification, ...notifications]));
+    }
   };
 
   return (
@@ -74,8 +91,9 @@ const Wishes = () => {
             </Button>
           </div>
         ) : (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
-            {wishes.map((wishItem) => (
+          <>
+            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 max-w-7xl mx-auto">
+              {currentWishes.map((wishItem) => (
               <Card
                 key={wishItem.id}
                 className="cursor-pointer hover:scale-105 transition-all duration-300 hover:shadow-2xl border-2 border-transparent hover:border-christmas-gold/50 animate-scale-in bg-card/90 backdrop-blur-sm"
@@ -108,8 +126,45 @@ const Wishes = () => {
                   </div>
                 </CardContent>
               </Card>
-            ))}
-          </div>
+              ))}
+            </div>
+            
+            {totalPages > 1 && (
+              <div className="flex justify-center items-center gap-2 mt-12">
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.max(prev - 1, 1))}
+                  disabled={currentPage === 1}
+                  className="hover:bg-christmas-red/10"
+                >
+                  <Icon name="ChevronLeft" size={16} />
+                </Button>
+                
+                {Array.from({ length: totalPages }, (_, i) => i + 1).map((pageNum) => (
+                  <Button
+                    key={pageNum}
+                    variant={currentPage === pageNum ? "default" : "outline"}
+                    size="sm"
+                    onClick={() => setCurrentPage(pageNum)}
+                    className={currentPage === pageNum ? "bg-christmas-red hover:bg-christmas-red/90" : "hover:bg-christmas-red/10"}
+                  >
+                    {pageNum}
+                  </Button>
+                ))}
+                
+                <Button
+                  variant="outline"
+                  size="sm"
+                  onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages))}
+                  disabled={currentPage === totalPages}
+                  className="hover:bg-christmas-red/10"
+                >
+                  <Icon name="ChevronRight" size={16} />
+                </Button>
+              </div>
+            )}
+          </>
         )}
       </div>
 

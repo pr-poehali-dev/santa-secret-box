@@ -52,7 +52,6 @@ const Home = () => {
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
       <Snowflakes />
-      <NotificationFeed />
       
       <div className="container mx-auto px-4 py-6 md:py-12 relative z-10">
         <header className="text-center mb-8 md:mb-16 animate-fade-in">

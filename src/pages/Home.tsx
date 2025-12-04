@@ -1,9 +1,24 @@
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import Icon from '@/components/ui/icon';
 import Snowflakes from '@/components/Snowflakes';
 import NotificationFeed from '@/components/NotificationFeed';
 
 const Home = () => {
+  const [wishCount, setWishCount] = useState(0);
+
+  useEffect(() => {
+    const updateCount = () => {
+      const wishes = JSON.parse(localStorage.getItem('wishes') || '[]');
+      setWishCount(wishes.length);
+    };
+
+    updateCount();
+    const interval = setInterval(updateCount, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
   return (
     <div className="min-h-screen bg-gradient-to-b from-background via-muted/20 to-background relative overflow-hidden">
       <Snowflakes />
@@ -17,9 +32,15 @@ const Home = () => {
           <h1 className="text-5xl md:text-7xl font-display font-bold text-christmas-red mb-4 drop-shadow-lg">
             Тайный Санта
           </h1>
-          <p className="text-xl md:text-2xl text-foreground/80 max-w-3xl mx-auto leading-relaxed">
+          <p className="text-xl md:text-2xl text-foreground/80 max-w-3xl mx-auto leading-relaxed mb-4">
             Волшебный год наступает! Давайте сделаем его особенным, даря радость незнакомцам
           </p>
+          <div className="inline-flex items-center gap-2 bg-christmas-gold/20 border-2 border-christmas-gold/50 rounded-full px-6 py-3 animate-scale-in">
+            <Icon name="Star" size={20} className="text-christmas-gold" />
+            <span className="text-lg font-semibold text-foreground">
+              {wishCount} {wishCount === 1 ? 'желание' : wishCount < 5 ? 'желания' : 'желаний'} ждёт исполнения
+            </span>
+          </div>
         </header>
 
         <div className="max-w-4xl mx-auto mb-16">

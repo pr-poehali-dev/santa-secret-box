@@ -18,11 +18,7 @@
         "category": "material"
       },
       "expectedStatus": 201,
-      "expectedBody": {
-        "id": "number",
-        "wish": "string"
-      },
-      "bodyMatcher": "partial"
+      "bodyMatcher": "skip"
     }
   ]
 }

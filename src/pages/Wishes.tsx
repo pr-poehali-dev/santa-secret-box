@@ -73,11 +73,15 @@ const Wishes = () => {
     }
   };
 
+  const wishWord = filteredWishes.length === 1 ? 'желание' : filteredWishes.length < 5 ? 'желания' : 'желаний';
+  const pageTitle = `Исполнить желание 🎁 - ${filteredWishes.length} ${wishWord} | Тайный Санта`;
+  const pageDescription = `Стань настоящим Сантой! ${filteredWishes.length} желаний ждут исполнения. Выбери желание и подари радость тем, кто в этом нуждается. Материальные подарки, помощь, общение, эмоции.`;
+
   return (
     <>
       <Helmet>
-        <title>Исполнить желание 🎁 - {filteredWishes.length} {filteredWishes.length === 1 ? 'желание' : filteredWishes.length < 5 ? 'желания' : 'желаний'} | Тайный Санта</title>
-        <meta name="description" content={`Стань настоящим Сантой! ${filteredWishes.length} желаний ждут исполнения. Выбери желание и подари радость тем, кто в этом нуждается. Материальные подарки, помощь, общение, эмоции.`} />
+        <title>{pageTitle}</title>
+        <meta name="description" content={pageDescription} />
         <link rel="canonical" href="https://preview--santa-secret-box.poehali.dev/wishes" />
       </Helmet>
       

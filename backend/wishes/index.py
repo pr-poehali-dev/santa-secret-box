@@ -59,10 +59,10 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
         
         elif method == 'POST':
             body = json.loads(event.get('body', '{}'))
-            wish = body.get('wish', '').strip()
-            country = body.get('country', '').strip()
-            telegram = body.get('telegram', '').strip()
-            category = body.get('category', '')
+            wish = body.get('wish', '').strip().replace("'", "''")
+            country = body.get('country', '').strip().replace("'", "''")
+            telegram = body.get('telegram', '').strip().replace("'", "''")
+            category = body.get('category', '').replace("'", "''")
             
             if not wish or not country or not telegram:
                 return {
@@ -72,10 +72,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'isBase64Encoded': False
                 }
             
-            cur.execute(
-                'INSERT INTO wishes (wish, country, telegram, category) VALUES (%s, %s, %s, %s) RETURNING id, EXTRACT(EPOCH FROM created_at)::bigint * 1000',
-                (wish, country, telegram, category)
-            )
+            query = f"INSERT INTO wishes (wish, country, telegram, category) VALUES ('{wish}', '{country}', '{telegram}', '{category}') RETURNING id, EXTRACT(EPOCH FROM created_at)::bigint * 1000"
+            cur.execute(query)
             result = cur.fetchone()
             wish_id = result[0]
             timestamp = result[1]
@@ -106,7 +104,8 @@ def handler(event: Dict[str, Any], context: Any) -> Dict[str, Any]:
                     'isBase64Encoded': False
                 }
             
-            cur.execute('DELETE FROM wishes WHERE id = %s', (wish_id,))
+            query = f"DELETE FROM wishes WHERE id = {int(wish_id)}"
+            cur.execute(query)
             
             return {
                 'statusCode': 200,
